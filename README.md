@@ -10,6 +10,7 @@ Offline-first practice app for IELTS General Training Writing (Task 1 letters an
 - **Type**: copy-type model sentences (WPM + accuracy, structure highlighted) or type them from memory (word-level diff). Works on the 500 structure sentences and the 154 vocabulary examples.
 - **Fix it**: 60 error-correction drills.
 - **Check**: paste a full letter or essay to see your range, likely errors, sign-off mismatch, word count and overused words.
+- **AI check (optional)**: on Practise and Check, send your text to Mistral (`mistral-small-latest`) for a corrected version, error list and GRA band estimate. Paste a free API key from console.mistral.ai; it's stored in this browser only. Needs internet. Or set a default key for everyone: copy `.env.example` to `.env.local` (or add it in Vercel → Settings → Environment Variables) and fill `NEXT_PUBLIC_MISTRAL_API_KEY`. Note: this key is baked into the public JS, so anyone can read it.
 - **Words**: 154 band-7+ words and phrases in 13 topics, with a search for weak words ("bad", "traffic"), stars and flashcards.
 - **Stats**: mastery by structure, 14-day activity, export/import backup.
 
