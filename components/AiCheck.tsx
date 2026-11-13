@@ -1,9 +1,10 @@
 "use client";
 import { useState } from "react";
 
-// Free key: https://console.mistral.ai → API keys ("Experiment" plan). Stored on this device only.
-const KEY = "ielts-grammar-gym:mistral-key";
-const MODEL = "mistral-small-latest";
+// Free key: https://openrouter.ai/keys. Stored on this device only.
+const KEY = "ielts-grammar-gym:openrouter-key";
+// openrouter/free = any available free model; pin one (e.g. google/gemma-4-31b-it:free) via env.
+const MODEL = process.env.NEXT_PUBLIC_OPENROUTER_MODEL || "openrouter/free";
 
 const SYSTEM = `You are an IELTS General Training writing examiner focused on Grammatical Range & Accuracy.
 Reply in plain text (no markdown headings), in this exact shape:
@@ -16,7 +17,7 @@ Band (GRA): <estimate like 6.5>
 Keep the learner's meaning and style. Be brief.`;
 
 // ponytail: env key is inlined into the public bundle; move to a server proxy if abuse matters.
-const ENV_KEY = process.env.NEXT_PUBLIC_MISTRAL_API_KEY ?? "";
+const ENV_KEY = process.env.NEXT_PUBLIC_OPENROUTER_API_KEY ?? "";
 
 function getKey() {
   try { return localStorage.getItem(KEY) || ENV_KEY; } catch { return ENV_KEY; }
@@ -38,9 +39,9 @@ export default function AiCheck({ text, context }: { text: string; context: stri
   const run = async () => {
     setBusy(true); setErr(""); setOut("");
     try {
-      const r = await fetch("https://api.mistral.ai/v1/chat/completions", {
+      const r = await fetch("https://openrouter.ai/api/v1/chat/completions", {
         method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}`, "X-Title": "IELTS Grammar Gym" },
         body: JSON.stringify({
           model: MODEL,
           temperature: 0.2,
@@ -51,8 +52,8 @@ export default function AiCheck({ text, context }: { text: string; context: stri
         }),
       });
       if (r.status === 401) throw new Error("Invalid API key.");
-      if (r.status === 429) throw new Error("Free-tier rate limit hit. Wait a minute and try again.");
-      if (!r.ok) throw new Error(`Mistral error ${r.status}`);
+      if (r.status === 429) throw new Error("Free-model rate limit hit. Wait a minute and try again.");
+      if (!r.ok) throw new Error(`OpenRouter error ${r.status}`);
       const j = await r.json();
       setOut(j.choices?.[0]?.message?.content ?? "No answer.");
     } catch (e) {
@@ -65,7 +66,7 @@ export default function AiCheck({ text, context }: { text: string; context: stri
   if (!key || editing)
     return (
       <form className="row" onSubmit={(e) => { e.preventDefault(); saveKey(new FormData(e.currentTarget).get("k") as string); }}>
-        <input name="k" type="password" defaultValue={key === ENV_KEY ? "" : key} placeholder="Mistral API key (free at console.mistral.ai)" style={{ flex: 1 }} aria-label="Mistral API key" />
+        <input name="k" type="password" defaultValue={key === ENV_KEY ? "" : key} placeholder="OpenRouter API key (free at openrouter.ai/keys)" style={{ flex: 1 }} aria-label="OpenRouter API key" />
         <button className="btn" type="submit">Save</button>
       </form>
     );
@@ -74,7 +75,7 @@ export default function AiCheck({ text, context }: { text: string; context: stri
     <div className="stack">
       <div className="row">
         <button className="btn" style={{ flex: 1 }} onClick={run} disabled={busy || !text.trim()}>
-          {busy ? "Asking AI…" : "✨ AI check (Mistral)"}
+          {busy ? "Asking AI…" : "✨ AI check"}
         </button>
         <button className="chip" onClick={() => setEditing(true)}>Key</button>
       </div>
