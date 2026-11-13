@@ -1,0 +1,14 @@
+{
+  "name": "IELTS Grammar Gym",
+  "short_name": "Grammar Gym",
+  "description": "Practise band 7+ grammar structures for IELTS GT Writing Task 1 and Task 2.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f7f6f2",
+  "theme_color": "#2f5d50",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
