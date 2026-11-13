@@ -6,6 +6,7 @@ import { STRUCTURES, STRUCTURE_BY_ID, uses, detectStructures } from "@/data/stru
 import { checkAccuracy, type Issue } from "@/data/errorRules";
 import { CTX_LABEL, type Exercise } from "@/lib/types";
 import { useProgress, rate, load } from "@/lib/store";
+import AiCheck from "@/components/AiCheck";
 
 type Mode = "choose" | "guided";
 type Task = "all" | "T1" | "T2";
@@ -198,6 +199,7 @@ export default function Practice() {
                 </div>
               ))}
               {res.issues.length === 0 && text.trim() && <div className="small ok">No common errors found ✓</div>}
+              {text.trim() && <AiCheck text={text.trim()} context={`${CTX_LABEL[ex.ctx]}. Task: ${ex.situation}${st ? ` Target structure: ${st.name}.` : ""}`} />}
 
               <div>
                 <div className="small muted">Model answer</div>

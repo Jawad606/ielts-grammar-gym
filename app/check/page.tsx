@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { STRUCTURES, detectStructures, norm } from "@/data/structures";
 import { checkAccuracy, checkSignOff, type Issue } from "@/data/errorRules";
+import AiCheck from "@/components/AiCheck";
 
 type Kind = "T1F" | "T1I" | "T2";
 
@@ -42,6 +43,10 @@ export default function Check() {
 
       {out && (
         <div className="stack">
+          <div className="card stack">
+            <h2>AI feedback</h2>
+            <AiCheck text={text.trim()} context={kind === "T2" ? "IELTS GT Task 2 essay" : kind === "T1I" ? "IELTS GT Task 1 informal letter" : "IELTS GT Task 1 formal/semi-formal letter"} />
+          </div>
           <div className="card">
             <div className="row between">
               <b>Word count</b>
